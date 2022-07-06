@@ -2185,6 +2185,18 @@ input[type='checkbox'] {
   padding: 0;
 }
 
+.announcement-bar__message.bold {
+  font-weight: bold;
+}
+
+.announcement-bar__message.italics {
+  font-style: italic;
+}
+
+.announcement-bar__message.underlined {
+  text-decoration: underline;
+}
+
 .announcement-bar__message {
   text-align: center;
   padding: 1rem 2rem;
