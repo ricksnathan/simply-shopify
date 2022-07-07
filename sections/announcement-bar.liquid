@@ -1,7 +1,11 @@
 {%- for block in section.blocks -%}
-{% assign isBold = block.settings.announcement_bold %}
-{% assign isItalic = block.settings.announcement_italics %}
-{% assign isUnderlined = block.settings.announcement_underlined %}
+  {% assign isBold = block.settings.announcement_bold %}
+  {% assign isItalic = block.settings.announcement_italics %}
+  {% assign isUnderlined = block.settings.announcement_underlined %}
+  {% assign showOnThisPage = block.settings.allowed_page %}
+
+  {%- if showOnThisPage == template.name -%}
+
 
   {%- case block.type -%}
     {%- when 'announcement' -%}
@@ -21,7 +25,8 @@
           {%- endif -%}
         {%- endif -%}
       </div>
-  {%- endcase -%}
+    {%- endcase -%}
+  {%- endif -%}
 {%- endfor -%}
 
 {% schema %}
@@ -89,7 +94,28 @@
           "id": "announcement_underlined",
           "label": "Underline Text",
           "default": true
+        },
+        {
+          "type": "select",
+          "id": "allowed_page",
+          "label": "Show only on",
+          "options": [
+            {
+              "value": "index",
+              "label": "Home Page"
+            },
+            {
+              "value": "product",
+              "label": "Product Page"
+            },
+            {
+              "value": "cart",
+              "label": "Cart Page"
+            }
+          ],
+          "default": "index"
         }
+        
       ]
     }
   ],
