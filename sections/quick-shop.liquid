@@ -1,0 +1,111 @@
+<div class="quick-shop">
+    {% for product in section.settings.product_list %}
+    <form method="post" action="/cart/add" id="quick-shop__form">
+      <div class="quick-shop__product">
+        <h2 class="h2">{{ product.title }}</h2>
+      {{product | img_url: '300x300', crop: 'center' | img_tag}}
+      <input type="hidden" name="id" value="{{ product.variants.first.id }}" />
+          <br />
+      <input type="submit" value="Add to cart" class="product-form__submit button button--primary" />
+    </div>
+    </form>   
+    {% endfor %}
+  </div>
+
+  {% style %}
+  .quick-shop {
+     background: {{ section.settings.background }};
+     padding: 30px 15px;
+     display: flex;
+     justify-content: center;
+     gap: 6em;
+  }
+
+  .h2 {
+    margin-bottom: 15px;
+  }
+
+  .quick-shop__product {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+
+  @media screen and (max-width: 750px) {
+    .quick-shop {
+      flex-direction: column;
+   }
+
+   .quick-shop img {
+    height: 300px;
+    width: 300px;
+   }
+  }
+{% endstyle %}
+
+{% javascript %}
+let cart = document.querySelector('cart-notification') || document.querySelector('cart-drawer');
+
+$('#quick-shop__form').submit(function(e){
+  console.log("Submitted");
+  e.preventDefault();
+  addItem();
+ })
+
+ function addItem() {
+  $.ajax({
+     type: 'POST', 
+     url: '/cart/add.js',
+     dataType: 'json', 
+     data: $('#quick-shop__form').serialize(),
+     success: addToCartOk,
+     error: addToCartFail
+  });
+}
+
+function addToCartOk(data) { 
+  cart.renderContents(data);
+} 
+
+function addToCartFail(obj, status) { 
+ alert("Sorry, there was an error.")
+}
+  
+{% endjavascript %}
+  
+  {% schema %}
+  {
+      "name": "Quick Shop",
+      "tag": "section",
+      "class": "quick-shop__section",
+      "settings": [
+          {
+              "type": "text",
+              "id": "title",
+              "label": "Section Title",
+              "default": "Section Title"
+          },
+          {
+            "type": "product_list",
+            "id": "product_list",
+            "label": "Products",
+            "limit": 2
+          },
+          {
+            "type": "color_background",
+            "id": "background",
+            "label": "Background",
+            "default": "linear-gradient(#ffffff, #000000)"
+          }
+      ],
+      "presets": [
+          {
+              "name": "Quick Shop",
+              "settings": {
+                  "title": "Quick Shop Product Reel"
+              }
+          }
+      ]
+  }
+  {% endschema %}
